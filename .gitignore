@@ -1,0 +1,6 @@
+.idea/*
+virtuoso.egg-info/*
+*.pyc
+env/*
+test.py
+.mypy_cache/*
