@@ -1,5 +1,5 @@
 .idea/*
-virtuoso.egg-info/*
+rodlayout.egg-info/*
 *.pyc
 env/*
 test.py

@@ -1,14 +1,14 @@
 from setuptools import setup, find_packages
 
-import virtuoso
+import rodlayout
 
 
 with open('README.md') as fin:
     long_description = fin.read()
 
 setup(
-    name='virtuoso',
-    version=virtuoso.__version__,
+    name='rodlayout',
+    version=rodlayout.__version__,
     author="Niels Buwen",
     author_email="dev@niels-buwen.de",
     description="A python wrapper for the Skill objects in virtuoso",
