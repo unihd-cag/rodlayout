@@ -10,7 +10,7 @@ DbRod = Tuple[Any, Any]
 
 
 class Canvas:
-    def __init__(self, cell_view: Any) -> None:
+    def __init__(self, cell_view: Any = None) -> None:
         self.cell_view = cell_view or current_workspace.ge.get_edit_cell_view()
         self.shapes: List[Shape] = []
 
