@@ -20,6 +20,16 @@ def canvas():
 saved_shapes = []
 
 
+def delete_shape(db, rod):
+    if db is None:
+        db = rod.db_id
+
+    if db.obj_type == 'figGroup':
+        for child in db.figs:
+            delete_shape(child, None)
+    current_workspace.db.delete_object(db)
+
+
 @fixture
 def cleanup():
     try:
@@ -27,9 +37,7 @@ def cleanup():
     finally:
         for db, rod in saved_shapes:
             try:
-                if db is None:
-                    db = rod.db_id
-                current_workspace.db.delete_object(db)
+                delete_shape(db, rod)
             except Exception as e:
                 simplefilter('always', UserWarning)
                 warn(f"Failed to delete shape {db},{rod}: {e}", category=UserWarning, stacklevel=1)

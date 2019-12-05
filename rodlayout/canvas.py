@@ -19,7 +19,7 @@ class Canvas(AppendMany[Shape]):
 
     The layer is controlled by the user_data field of the shapes
 
-    >>> c = Canvas()
+    >>> c = Canvas(...)
     """
 
     def __init__(self, cell_view: Any = None) -> None:
@@ -31,7 +31,7 @@ class Canvas(AppendMany[Shape]):
         Add one shape to the Canvas
 
         >>> from geometry import Rect
-        >>> c = Canvas()
+        >>> c = Canvas(...)
         >>> len(c.shapes)
         0
 
