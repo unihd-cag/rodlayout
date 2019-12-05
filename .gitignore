@@ -4,3 +4,4 @@ rodlayout.egg-info/*
 env/*
 test.py
 .mypy_cache/*
+docs/_build/*

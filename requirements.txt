@@ -1,2 +1,2 @@
 skillbridge
-geometry
+simple-geometry

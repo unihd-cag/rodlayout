@@ -1,6 +1,7 @@
 from typing import List, Any, Union, Tuple, Generator, Iterable
 
 from geometry import Rect, Segment, Group
+from geometry.mixins import AppendMany
 from skillbridge import current_workspace
 
 from .layer import Layer
@@ -9,7 +10,18 @@ Shape = Union[Rect, Segment, Group]
 DbRod = Tuple[Any, Any]
 
 
-class Canvas:
+class Canvas(AppendMany[Shape]):
+    """
+    A Canvas class, similar to the geometry.Canvas class.
+
+    Instead of creating a visual output of the shapes, this
+    canvas creates shapes in virtuoso.
+
+    The layer is controlled by the user_data field of the shapes
+
+    >>> c = Canvas()
+    """
+
     def __init__(self, cell_view: Any = None) -> None:
         self.cell_view = cell_view or current_workspace.ge.get_edit_cell_view()
         self.shapes: List[Shape] = []
@@ -29,36 +41,6 @@ class Canvas:
         """
         self.shapes.append(shape)
 
-    def extend(self, shapes: Iterable[Shape]) -> None:
-        """
-        Add shapes from an iterable to the Canvas
-
-        >>> from geometry import Rect
-        >>> c = Canvas()
-        >>> len(c.shapes)
-        0
-
-        >>> c.extend([Rect[2, 4, Layer('M1', 'drawing')], ..., ...])
-        >>> len(c.shapes)
-        3
-        """
-        self.shapes.extend(shapes)
-
-    def extend_star(self, *shapes: Shape) -> None:
-        """
-        Add shapes from var args to the Canvas
-
-        >>> from geometry import Rect
-        >>> c = Canvas()
-        >>> len(c.shapes)
-        0
-
-        >>> c.extend_star(Rect[2, 4, Layer('M1', 'drawing')], ..., ...)
-        >>> len(c.shapes)
-        3
-        """
-        self.shapes.extend(shapes)
-
     def _draw(self, shapes: List[Shape]) -> Generator[DbRod, None, None]:
         for shape in shapes:
             type_name = type(shape).__name__.lower()
@@ -72,7 +54,7 @@ class Canvas:
 
     def _draw_rect(self, rect: Rect) -> DbRod:
         layer = rect.user_data
-        assert isinstance(layer, Layer)
+        assert isinstance(layer, Layer), "Rectangle needs a layer."
 
         b_box = rect.bottom_left, rect.top_right
         rod = current_workspace.rod.create_rect(cv_id=self.cell_view, layer=layer,
@@ -81,11 +63,11 @@ class Canvas:
 
     def _draw_segment(self, segment: Segment) -> DbRod:
         layer = segment.user_data
-        assert isinstance(layer, Layer)
+        assert isinstance(layer, Layer), "Segment needs a layer."
 
         points = segment.start, segment.end
         rod = current_workspace.rod.create_path(cv_id=self.cell_view, layer=layer,
-                                                pts=points)
+                                                pts=points, width=segment.thickness)
         return None, rod
 
     def _draw_group(self, group: Group) -> DbRod:
