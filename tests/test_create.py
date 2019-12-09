@@ -161,3 +161,25 @@ def test_create_group(ws, canvas, cleanup):
     assert rect_equal(g.bbox, db)
     assert rect_equal(db.figs[0], r)
     assert segment_equal(db.figs[1], s)
+
+
+def test_create_nested_gropu(ws, canvas, cleanup):
+    one = Rect[0:0.1, 0.2:0.3, Layer('M1', 'drawing')]
+    two = one.copy()
+    two.translate(left=one.right)
+    group_one = Group([one, two])
+
+    three = one.copy()
+    three.translate(top=one.bottom)
+
+    group_two = Group([group_one, three])
+
+    canvas.append(group_two)
+    (db, rod), = canvas.draw()
+
+    assert db is not None or rod is not None
+
+    assert rect_equal(group_two.bbox, db)
+    assert rect_equal(db.figs[1], three)
+    assert rect_equal(db.figs[0].figs[0], one)
+    assert rect_equal(db.figs[0].figs[1], two)
