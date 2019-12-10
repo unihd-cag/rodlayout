@@ -1,4 +1,4 @@
-Canvas Backend to Cadence Rod Objects
+Canvas Backend to Cadence Rod Objects ![status](https://github.com/unihd-cag/rodlayout/workflows/Python%20package/badge.svg)
 =====================================
 
 Install
