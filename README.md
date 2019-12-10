@@ -1,7 +1,7 @@
 Python-Virtuoso Wrapper
 =======================
 
-```
+```python
 from skillbridge import Workspace
 from geometry import Rect, Group
 

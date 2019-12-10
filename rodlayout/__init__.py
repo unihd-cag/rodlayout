@@ -1,6 +1,6 @@
 from .layer import Layer
 from .canvas import Canvas
 
-__version__ = '0.0.2'
+__version__ = '0.1.0'
 
 __all__ = ['Layer', 'Canvas']
