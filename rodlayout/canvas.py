@@ -1,4 +1,4 @@
-from typing import List, Any, Union, Tuple, Generator, Iterable
+from typing import List, Any, Union, Tuple, Generator
 
 from geometry import Rect, Segment, Group
 from geometry.mixins import AppendMany
@@ -57,8 +57,7 @@ class Canvas(AppendMany[Shape]):
         assert isinstance(layer, Layer), "Rectangle needs a layer."
 
         b_box = rect.bottom_left, rect.top_right
-        rod = current_workspace.rod.create_rect(cv_id=self.cell_view, layer=layer,
-                                                b_box=b_box)
+        rod = current_workspace.rod.create_rect(cv_id=self.cell_view, layer=layer, b_box=b_box)
         return None, rod
 
     def _draw_segment(self, segment: Segment) -> DbRod:
@@ -66,13 +65,13 @@ class Canvas(AppendMany[Shape]):
         assert isinstance(layer, Layer), "Segment needs a layer."
 
         points = segment.start, segment.end
-        rod = current_workspace.rod.create_path(cv_id=self.cell_view, layer=layer,
-                                                pts=points, width=segment.thickness)
+        rod = current_workspace.rod.create_path(
+            cv_id=self.cell_view, layer=layer, pts=points, width=segment.thickness
+        )
         return None, rod
 
     def _draw_group(self, group: Group) -> DbRod:
-        db = current_workspace.db.create_fig_group(self.cell_view,
-                                                   None, False, [0, 0], "R0")
+        db = current_workspace.db.create_fig_group(self.cell_view, None, False, [0, 0], "R0")
 
         for child_db, child_rod in self._draw(group.shapes):
             if child_db is None:
