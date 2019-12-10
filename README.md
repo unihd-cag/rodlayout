@@ -1,6 +1,16 @@
 Canvas Backend to Cadence Rod Objects
 =====================================
 
+Install
+-------
+
+```bash
+pip install rodlayout
+```
+
+Read more in the [full documentation](https://unihd-cag.github.io/rodlayout/).
+
+
 ```python
 from skillbridge import Workspace
 from geometry import Rect, Group
