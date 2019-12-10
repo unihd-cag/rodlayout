@@ -9,5 +9,6 @@ class Layer(NamedTuple):
     Layer(name='M1', purpose='drawing')
 
     """
+
     name: str
     purpose: str

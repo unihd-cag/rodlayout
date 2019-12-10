@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-import rodlayout
+version = '0.1.0'
 
 
 with open('README.md') as fin:
@@ -8,7 +8,7 @@ with open('README.md') as fin:
 
 setup(
     name='rodlayout',
-    version=rodlayout.__version__,
+    version=version,
     author="Niels Buwen",
     author_email="dev@niels-buwen.de",
     description="A python wrapper for the Skill objects in virtuoso",
@@ -16,7 +16,7 @@ setup(
     long_description_content_type='text/markdown',
     packages=find_packages(),
     install_requires=[
-        'geometry',
+        'simple-geometry',
         'skillbridge'
     ],
     classifiers=[
