@@ -5,4 +5,5 @@ Reference
     :glob:
 
     layer
+    proxy
     canvas

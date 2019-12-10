@@ -44,7 +44,7 @@ class DbShape:
             current_workspace.hi.redraw()
 
     @property
-    def valid(self):
+    def valid(self) -> bool:
         """
         Check if the db object is still valid and was not deleted.
         """
