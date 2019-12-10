@@ -22,7 +22,6 @@ jobs:
           pip install sphinx
           cd docs
           make html
-          touch
 
       - name: Deploy to Github Pages
         uses: JamesIves/github-pages-deploy-action@releases/v3
