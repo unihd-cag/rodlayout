@@ -1,13 +1,13 @@
-from typing import List, Any, Union, Tuple, Generator
+from typing import List, Any, Union, Generator
 
 from geometry import Rect, Segment, Group
 from geometry.mixins import AppendMany
 from skillbridge import current_workspace
 
 from .layer import Layer
+from .proxy import RodShape, DbShape
 
 Shape = Union[Rect, Segment, Group]
-DbRod = Tuple[Any, Any]
 
 
 class Canvas(AppendMany[Shape]):
@@ -41,26 +41,32 @@ class Canvas(AppendMany[Shape]):
         """
         self.shapes.append(shape)
 
-    def _draw(self, shapes: List[Shape]) -> Generator[DbRod, None, None]:
+    def _draw(self, shapes: List[Shape]) -> Generator[DbShape, None, None]:
         for shape in shapes:
             type_name = type(shape).__name__.lower()
             yield getattr(self, f'_draw_{type_name}')(shape)
 
-    def draw(self) -> List[DbRod]:
+    def draw(self, redraw=False) -> List[DbShape]:
         """
         Draw all shapes in the Canvas, i.e. instantiate them in Virtuoso.
-        """
-        return list(self._draw(self.shapes))
 
-    def _draw_rect(self, rect: Rect) -> DbRod:
+        Pass ``True```to ``redraw`` to automatically redraw the shapes in Virtuoso.
+        Without this, you must first change the view in Virtuoso to see the created shapes
+        """
+        shapes = list(self._draw(self.shapes))
+        if redraw:
+            current_workspace.hi.redraw()
+        return shapes
+
+    def _draw_rect(self, rect: Rect) -> DbShape:
         layer = rect.user_data
         assert isinstance(layer, Layer), "Rectangle needs a layer."
 
         b_box = rect.bottom_left, rect.top_right
         rod = current_workspace.rod.create_rect(cv_id=self.cell_view, layer=layer, b_box=b_box)
-        return None, rod
+        return RodShape.from_rod(rod)
 
-    def _draw_segment(self, segment: Segment) -> DbRod:
+    def _draw_segment(self, segment: Segment) -> DbShape:
         layer = segment.user_data
         assert isinstance(layer, Layer), "Segment needs a layer."
 
@@ -68,14 +74,12 @@ class Canvas(AppendMany[Shape]):
         rod = current_workspace.rod.create_path(
             cv_id=self.cell_view, layer=layer, pts=points, width=segment.thickness
         )
-        return None, rod
+        return RodShape.from_rod(rod)
 
-    def _draw_group(self, group: Group) -> DbRod:
+    def _draw_group(self, group: Group) -> DbShape:
         db = current_workspace.db.create_fig_group(self.cell_view, None, False, [0, 0], "R0")
 
-        for child_db, child_rod in self._draw(group.shapes):
-            if child_db is None:
-                child_db = child_rod.db_id
-            current_workspace.db.add_fig_to_fig_group(db, child_db)
+        for child in self._draw(group.shapes):
+            current_workspace.db.add_fig_to_fig_group(db, child.db)
 
-        return db, None
+        return DbShape(db)
