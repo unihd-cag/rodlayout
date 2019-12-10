@@ -5,6 +5,7 @@ from geometry import Rect, Segment, Point, Group
 from skillbridge import Workspace, current_workspace
 
 from rodlayout import Canvas, Layer
+from rodlayout.proxy import DbShape
 
 
 @fixture
@@ -20,27 +21,17 @@ def canvas():
 saved_shapes = []
 
 
-def delete_shape(db, rod):
-    if db is None:
-        db = rod.db_id
-
-    if db.obj_type == 'figGroup':
-        for child in db.figs:
-            delete_shape(child, None)
-    current_workspace.db.delete_object(db)
-
-
 @fixture
 def cleanup():
     try:
         yield None
     finally:
-        for db, rod in saved_shapes:
+        for db in saved_shapes:
             try:
-                delete_shape(db, rod)
+                db.delete(children=True)
             except Exception as e:
                 simplefilter('always', UserWarning)
-                warn(f"Failed to delete shape {db},{rod}: {e}", category=UserWarning, stacklevel=1)
+                warn(f"Failed to delete shape {db}: {e}", category=UserWarning, stacklevel=1)
                 simplefilter('default', UserWarning)
 
         saved_shapes.clear()
@@ -133,19 +124,20 @@ def test_create_rect(ws, canvas, cleanup):
     r = Rect[0:0.1, 0.2:0.3, layer]
 
     canvas.append(r)
-    (db, rod), = canvas.draw()
-    assert db is not None or rod is not None
-    assert rect_equal(r, rod)
+    rod, = canvas.draw()
+
+    assert rod.valid
+    assert rect_equal(r, rod.db)
 
 
 def test_create_segment(ws, canvas, cleanup):
     layer = Layer('M2', 'pin')
     s = Segment.from_start_end(Point(0, 1), Point(10, 1), 2, layer)
     canvas.append(s)
-    (db, rod), = canvas.draw()
+    rod, = canvas.draw()
 
-    assert db is not None or rod is not None
-    assert segment_equal(s, rod)
+    assert rod.valid
+    assert segment_equal(s, rod.db)
 
 
 def test_create_group(ws, canvas, cleanup):
@@ -154,16 +146,15 @@ def test_create_group(ws, canvas, cleanup):
     g = Group([r, s])
 
     canvas.append(g)
-    (db, rod), = canvas.draw()
+    db, = canvas.draw()
 
-    assert db is not None or rod is not None
+    assert db.valid
+    assert rect_equal(g.bbox, db.db)
+    assert rect_equal(db.db.figs[0], r)
+    assert segment_equal(db.db.figs[1], s)
 
-    assert rect_equal(g.bbox, db)
-    assert rect_equal(db.figs[0], r)
-    assert segment_equal(db.figs[1], s)
 
-
-def test_create_nested_gropu(ws, canvas, cleanup):
+def test_create_nested_group(ws, canvas, cleanup):
     one = Rect[0:0.1, 0.2:0.3, Layer('M1', 'drawing')]
     two = one.copy()
     two.translate(left=one.right)
@@ -175,11 +166,25 @@ def test_create_nested_gropu(ws, canvas, cleanup):
     group_two = Group([group_one, three])
 
     canvas.append(group_two)
-    (db, rod), = canvas.draw()
+    db, = canvas.draw()
 
-    assert db is not None or rod is not None
+    assert rect_equal(group_two.bbox, db.db)
+    assert rect_equal(db.db.figs[1], three)
+    assert rect_equal(db.db.figs[0].figs[0], one)
+    assert rect_equal(db.db.figs[0].figs[1], two)
 
-    assert rect_equal(group_two.bbox, db)
-    assert rect_equal(db.figs[1], three)
-    assert rect_equal(db.figs[0].figs[0], one)
-    assert rect_equal(db.figs[0].figs[1], two)
+
+def test_delete_works(ws, canvas, cleanup):
+    one = Rect[0:0.1, 0.2:0.3, Layer('M1', 'drawing')]
+    group = Group([one])
+
+    canvas.append(group)
+    db, = canvas.draw()
+
+    rect_db = DbShape(db.db.figs[0])
+
+    rect_db.delete()
+
+    assert not db.db.figs
+    assert not rect_db.valid
+    assert db.valid
