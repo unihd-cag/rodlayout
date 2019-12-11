@@ -1,7 +1,12 @@
+from typing import Generator
 from dataclasses import dataclass
 
 from skillbridge import current_workspace
 from skillbridge.client.objects import RemoteObject
+
+from geometry import Point
+
+from .transform import Transform
 
 
 @dataclass(frozen=True)
@@ -50,6 +55,22 @@ class DbShape:
         """
         return current_workspace.db.valid_p(self.db)
 
+    def copy(
+        self, translate: Point = Point(0, 0), transform: Transform = Transform.identity
+    ) -> 'DbShape':
+        """
+        Copies the dbShape and translates, transforms the copy.
+        """
+        cv = self.db.cell_view
+        return DbShape(current_workspace.db.copy_fig(self.db, cv, (translate, transform.value)))
+
+    def children(self) -> Generator['RodShape', None, None]:
+        for fig in self.db.figs:
+            if fig.obj_type == 'figGroup':
+                yield from DbShape(fig).children()
+            else:
+                yield RodShape.from_rod(current_workspace.rod.get_obj(fig))
+
 
 @dataclass(frozen=True)
 class RodShape(DbShape):
@@ -60,6 +81,7 @@ class RodShape(DbShape):
     E.g. rectangles and paths will be represented as a ``RodShape``
     """
 
+    # db: RemoteObject
     rod: RemoteObject
 
     @classmethod
@@ -68,3 +90,14 @@ class RodShape(DbShape):
         Create a rod proxy from an existing rod object in virtuoso.
         """
         return RodShape(rod.db_id, rod)
+
+    def copy(
+        self, translate: Point = Point(0, 0), transform: Transform = Transform.identity
+    ) -> 'RodShape':
+        """
+        Copies the RodShape and translates, transforms the copy.
+        """
+        cv = self.rod.cv_id
+        db_id = current_workspace.db.copy_fig(self.db, cv, (translate, transform.value))
+
+        return RodShape.from_rod(current_workspace.rod.name_shape(shape_id=db_id))
