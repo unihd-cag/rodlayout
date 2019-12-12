@@ -6,3 +6,5 @@ test.py
 .mypy_cache/*
 docs/_build/*
 **/.tox/*
+.coverage
+**/htmlcov/*
