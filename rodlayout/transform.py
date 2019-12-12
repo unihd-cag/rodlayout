@@ -12,6 +12,7 @@ class Transform(Enum):
     mirror_x  -> "MX"
     mirror_y  -> "MY"
     """
+
     identity = "R0"
     rotate90 = "R90"
     rotate180 = "R180"
