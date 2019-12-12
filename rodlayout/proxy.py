@@ -65,6 +65,9 @@ class DbShape:
         return DbShape(current_workspace.db.copy_fig(self.db, cv, (translate, transform.value)))
 
     def children(self) -> Generator['RodShape', None, None]:
+        """
+        Get all RodShapes within a Group and its hierarchy
+        """
         for fig in self.db.figs:
             if fig.obj_type == 'figGroup':
                 yield from DbShape(fig).children()
