@@ -34,6 +34,66 @@
             
   <div class="section" id="proxies">
 <h1>Proxies<a class="headerlink" href="#proxies" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="rodlayout.proxy.DbShape">
+<em class="property">class </em><code class="sig-prename descclassname">rodlayout.proxy.</code><code class="sig-name descname">DbShape</code><span class="sig-paren">(</span><em class="sig-param">db: skillbridge.client.objects.RemoteObject</em><span class="sig-paren">)</span><a class="headerlink" href="#rodlayout.proxy.DbShape" title="Permalink to this definition">¶</a></dt>
+<dd><p>A proxy to an existing shape in Virtuoso.</p>
+<p>The shape only consists of a db object without a rod object.
+E.g. figure groups will be represented as a <code class="docutils literal notranslate"><span class="pre">DbShape</span></code></p>
+<dl class="method">
+<dt id="rodlayout.proxy.DbShape.children">
+<code class="sig-name descname">children</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Generator[rodlayout.proxy.RodShape, None, None]<a class="headerlink" href="#rodlayout.proxy.DbShape.children" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all RodShapes within a Group and its hierarchy</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rodlayout.proxy.DbShape.copy">
+<code class="sig-name descname">copy</code><span class="sig-paren">(</span><em class="sig-param">translate: geometry.point.Point = (0</em>, <em class="sig-param">0)</em>, <em class="sig-param">transform: rodlayout.transform.Transform = &lt;Transform.identity: 'R0'&gt;</em><span class="sig-paren">)</span> &#x2192; rodlayout.proxy.DbShape<a class="headerlink" href="#rodlayout.proxy.DbShape.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy the dbShape and translate, transform the copy.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rodlayout.proxy.DbShape.delete">
+<code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param">children=True</em>, <em class="sig-param">redraw=False</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#rodlayout.proxy.DbShape.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete the db object.</p>
+<p>Setting <code class="docutils literal notranslate"><span class="pre">children</span></code> to <code class="docutils literal notranslate"><span class="pre">True</span></code> will also delete the child shapes if this
+is a figure group.</p>
+<p>Setting <code class="docutils literal notranslate"><span class="pre">redraw</span></code> to <code class="docutils literal notranslate"><span class="pre">True</span></code> will refresh the view in Virtuoso</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>After you deleted an object you should discard the python variable, too,
+because the underlying db object is not valid anymore.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="rodlayout.proxy.DbShape.valid">
+<em class="property">property </em><code class="sig-name descname">valid</code><a class="headerlink" href="#rodlayout.proxy.DbShape.valid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the db object is still valid and was not deleted.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rodlayout.proxy.RodShape">
+<em class="property">class </em><code class="sig-prename descclassname">rodlayout.proxy.</code><code class="sig-name descname">RodShape</code><span class="sig-paren">(</span><em class="sig-param">db: skillbridge.client.objects.RemoteObject</em>, <em class="sig-param">rod: skillbridge.client.objects.RemoteObject</em><span class="sig-paren">)</span><a class="headerlink" href="#rodlayout.proxy.RodShape" title="Permalink to this definition">¶</a></dt>
+<dd><p>A proxy to an existing shape in Virtuoso with a rod object.</p>
+<p>This proxy also contains the rod object which allows aligning and other features.
+E.g. rectangles and paths will be represented as a <code class="docutils literal notranslate"><span class="pre">RodShape</span></code></p>
+<dl class="method">
+<dt id="rodlayout.proxy.RodShape.copy">
+<code class="sig-name descname">copy</code><span class="sig-paren">(</span><em class="sig-param">translate: geometry.point.Point = (0</em>, <em class="sig-param">0)</em>, <em class="sig-param">transform: rodlayout.transform.Transform = &lt;Transform.identity: 'R0'&gt;</em><span class="sig-paren">)</span> &#x2192; rodlayout.proxy.RodShape<a class="headerlink" href="#rodlayout.proxy.RodShape.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy the RodShape and translate, transform the copy.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rodlayout.proxy.RodShape.from_rod">
+<em class="property">classmethod </em><code class="sig-name descname">from_rod</code><span class="sig-paren">(</span><em class="sig-param">rod: skillbridge.client.objects.RemoteObject</em><span class="sig-paren">)</span> &#x2192; rodlayout.proxy.RodShape<a class="headerlink" href="#rodlayout.proxy.RodShape.from_rod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a rod proxy from an existing rod object in virtuoso.</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
@@ -56,6 +116,7 @@
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="transform.html">Transform</a></li>
 <li class="toctree-l2"><a class="reference internal" href="layer.html">Layer</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Proxies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="canvas.html">Canvas</a></li>

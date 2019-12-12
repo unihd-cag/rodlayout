@@ -33,6 +33,49 @@
             
   <div class="section" id="canvas">
 <h1>Canvas<a class="headerlink" href="#canvas" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="rodlayout.Canvas">
+<em class="property">class </em><code class="sig-prename descclassname">rodlayout.</code><code class="sig-name descname">Canvas</code><span class="sig-paren">(</span><em class="sig-param">cell_view: Any = None</em><span class="sig-paren">)</span><a class="headerlink" href="#rodlayout.Canvas" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Canvas class, similar to the geometry.Canvas class.</p>
+<p>Instead of creating a visual output of the shapes, this
+canvas creates shapes in virtuoso.</p>
+<p>The layer is controlled by the user_data field of the shapes</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">Canvas</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="rodlayout.Canvas.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">cell_view: Any = None</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#rodlayout.Canvas.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rodlayout.Canvas.append">
+<code class="sig-name descname">append</code><span class="sig-paren">(</span><em class="sig-param">shape: Union[geometry.rect.Rect, geometry.path.Segment, geometry.group.Group]</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#rodlayout.Canvas.append" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add one shape to the Canvas</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">geometry</span> <span class="kn">import</span> <span class="n">Rect</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">Canvas</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">shapes</span><span class="p">)</span>
+<span class="go">0</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Rect</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">Layer</span><span class="p">(</span><span class="s1">&#39;M1&#39;</span><span class="p">,</span> <span class="s1">&#39;drawing&#39;</span><span class="p">)])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">shapes</span><span class="p">)</span>
+<span class="go">1</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="rodlayout.Canvas.draw">
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">redraw=False</em><span class="sig-paren">)</span> &#x2192; List[rodlayout.proxy.DbShape]<a class="headerlink" href="#rodlayout.Canvas.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw all shapes in the Canvas, i.e. instantiate them in Virtuoso.</p>
+<p>Pass <code class="docutils literal notranslate"><span class="pre">True```to</span> <span class="pre">``redraw</span></code> to automatically redraw the shapes in Virtuoso.
+Without this, you must first change the view in Virtuoso to see the created shapes</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
@@ -55,6 +98,7 @@
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="transform.html">Transform</a></li>
 <li class="toctree-l2"><a class="reference internal" href="layer.html">Layer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="proxy.html">Proxies</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Canvas</a></li>
