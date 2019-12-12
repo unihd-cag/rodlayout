@@ -46,4 +46,5 @@ jobs:
           pip install -r requirements.txt
           pip install sphinx
           cd docs
+          make clean
           make html
