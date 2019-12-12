@@ -1,6 +1,10 @@
 from setuptools import setup, find_packages
 
-version = '0.1.3'
+
+with open('rodlayout/version.py') as fin:
+    data = {}
+    exec(fin.read(), data)
+    version = data['__version__']
 
 
 with open('README.md') as fin:
