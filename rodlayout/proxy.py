@@ -59,7 +59,7 @@ class DbShape:
         self, translate: Point = Point(0, 0), transform: Transform = Transform.identity
     ) -> 'DbShape':
         """
-        Copies the dbShape and translates, transforms the copy.
+        Copy the dbShape and translate, transform the copy.
         """
         cv = self.db.cell_view
         return DbShape(current_workspace.db.copy_fig(self.db, cv, (translate, transform.value)))
@@ -98,7 +98,7 @@ class RodShape(DbShape):
         self, translate: Point = Point(0, 0), transform: Transform = Transform.identity
     ) -> 'RodShape':
         """
-        Copies the RodShape and translates, transforms the copy.
+        Copy the RodShape and translate, transform the copy.
         """
         cv = self.rod.cv_id
         db_id = current_workspace.db.copy_fig(self.db, cv, (translate, transform.value))

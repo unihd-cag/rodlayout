@@ -1,6 +1,8 @@
 Transform
-=======
+=========
 
 
-.. autoclass:: rodlayout.transform
+.. autoclass:: rodlayout.transform.Transform
     :members:
+    :inherited-members:
+    :undoc-members:
