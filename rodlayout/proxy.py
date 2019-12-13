@@ -56,7 +56,9 @@ class DbShape:
         """
         return cast(bool, current_workspace.db.valid_p(self.db))
 
-    def _copy_figure(self, cell_view: RemoteObject, translate: Point, transform: Transform) -> RemoteObject:
+    def _copy_figure(
+        self, cell_view: RemoteObject, translate: Point, transform: Transform
+    ) -> RemoteObject:
         translate_transform = cast(SkillTuple, (translate, transform))
         db = current_workspace.db.copy_fig(self.db, cell_view, translate_transform)
 
