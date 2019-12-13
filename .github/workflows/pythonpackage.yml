@@ -32,6 +32,7 @@ jobs:
     - name: Check with mypy
       run: |
         pip install mypy
+        pip install -r requirements.txt
         mypy --strict rodlayout
 
   build-documentation:
