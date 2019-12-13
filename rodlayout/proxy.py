@@ -1,7 +1,8 @@
-from typing import Generator
+from typing import Generator, cast
 from dataclasses import dataclass
 
 from skillbridge import current_workspace
+from skillbridge.client.hints import SkillTuple
 from skillbridge.client.objects import RemoteObject
 
 from geometry import Point
@@ -26,7 +27,7 @@ class DbShape:
     def __repr__(self) -> str:
         return self.__str__()
 
-    def delete(self, children=True, redraw=False) -> None:
+    def delete(self, children: bool = True, redraw: bool = False) -> None:
         """
         Delete the db object.
 
@@ -53,7 +54,15 @@ class DbShape:
         """
         Check if the db object is still valid and was not deleted.
         """
-        return current_workspace.db.valid_p(self.db)
+        return cast(bool, current_workspace.db.valid_p(self.db))
+
+    def _copy_figure(
+        self, cell_view: RemoteObject, translate: Point, transform: Transform
+    ) -> RemoteObject:
+        translate_transform = cast(SkillTuple, (translate, transform))
+        db = current_workspace.db.copy_fig(self.db, cell_view, translate_transform)
+
+        return cast(RemoteObject, db)
 
     def copy(
         self, translate: Point = Point(0, 0), transform: Transform = Transform.identity
@@ -61,8 +70,7 @@ class DbShape:
         """
         Copy the dbShape and translate, transform the copy.
         """
-        cv = self.db.cell_view
-        return DbShape(current_workspace.db.copy_fig(self.db, cv, (translate, transform.value)))
+        return DbShape(self._copy_figure(self.db.cell_view, translate, transform))
 
     def children(self) -> Generator['RodShape', None, None]:
         """
@@ -72,7 +80,8 @@ class DbShape:
             if fig.obj_type == 'figGroup':
                 yield from DbShape(fig).children()
             else:
-                yield RodShape.from_rod(current_workspace.rod.get_obj(fig))
+                rod = current_workspace.rod.get_obj(fig)
+                yield RodShape.from_rod(cast(RemoteObject, rod))
 
 
 @dataclass(frozen=True)
@@ -100,7 +109,7 @@ class RodShape(DbShape):
         """
         Copy the RodShape and translate, transform the copy.
         """
-        cv = self.rod.cv_id
-        db_id = current_workspace.db.copy_fig(self.db, cv, (translate, transform.value))
+        db = self._copy_figure(self.rod.cv_id, translate, transform)
+        rod = current_workspace.rod.name_shape(shape_id=db)
 
-        return RodShape.from_rod(current_workspace.rod.name_shape(shape_id=db_id))
+        return RodShape(db, cast(RemoteObject, rod))
