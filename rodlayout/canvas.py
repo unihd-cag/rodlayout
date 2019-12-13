@@ -1,8 +1,10 @@
-from typing import List, Any, Union, Generator
+from typing import List, Any, Union, Generator, cast
 
 from geometry import Rect, Segment, Group
 from geometry.mixins import AppendMany
 from skillbridge import current_workspace
+from skillbridge.client.hints import SkillTuple
+from skillbridge.client.objects import RemoteObject
 
 from .layer import Layer
 from .proxy import RodShape, DbShape
@@ -46,7 +48,7 @@ class Canvas(AppendMany[Shape]):
             type_name = type(shape).__name__.lower()
             yield getattr(self, f'_draw_{type_name}')(shape)
 
-    def draw(self, redraw=False) -> List[DbShape]:
+    def draw(self, redraw: bool = False) -> List[DbShape]:
         """
         Draw all shapes in the Canvas, i.e. instantiate them in Virtuoso.
 
@@ -59,15 +61,15 @@ class Canvas(AppendMany[Shape]):
         return shapes
 
     def _draw_rect(self, rect: Rect) -> DbShape:
-        layer = rect.user_data
+        layer = cast(SkillTuple, rect.user_data)
         assert isinstance(layer, Layer), "Rectangle needs a layer."
 
-        b_box = rect.bottom_left, rect.top_right
-        rod = current_workspace.rod.create_rect(cv_id=self.cell_view, layer=layer, b_box=b_box)
-        return RodShape.from_rod(rod)
+        bbox = cast(SkillTuple, (rect.bottom_left, rect.top_right))
+        rod = current_workspace.rod.create_rect(cv_id=self.cell_view, layer=layer, b_box=bbox)
+        return RodShape.from_rod(cast(RemoteObject, rod))
 
     def _draw_segment(self, segment: Segment) -> DbShape:
-        layer = segment.user_data
+        layer = cast(SkillTuple, segment.user_data)
         assert isinstance(layer, Layer), "Segment needs a layer."
 
         points = segment.start, segment.end
@@ -77,9 +79,10 @@ class Canvas(AppendMany[Shape]):
         return RodShape.from_rod(rod)
 
     def _draw_group(self, group: Group) -> DbShape:
-        db = current_workspace.db.create_fig_group(self.cell_view, None, False, [0, 0], "R0")
+        center = cast(SkillTuple, (0, 0))
+        db = current_workspace.db.create_fig_group(self.cell_view, None, False, center, "R0")
 
         for child in self._draw(group.shapes):
             current_workspace.db.add_fig_to_fig_group(db, child.db)
 
-        return DbShape(db)
+        return DbShape(cast(RemoteObject, db))
