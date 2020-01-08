@@ -12,7 +12,7 @@ from .transform import Transform
 
 
 @dataclass
-class DbShape:
+class DbShape(CanTranslate):
     """
     A proxy to an existing shape in Virtuoso.
 
@@ -28,7 +28,7 @@ class DbShape:
     def __repr__(self) -> str:
         return self.__str__()
 
-    def move(self, offset: Point):
+    def move(self, offset: Point) -> None:
         """
         Move the db object relative by a given offset
 
@@ -94,7 +94,7 @@ class DbShape:
                 yield RodShape.from_rod(cast(RemoteObject, rod))
 
     @property
-    def _bbox(self):
+    def _bbox(self) -> Rect:
         (left, bottom), (right, top) = self.db.b_box
         return Rect.from_edges(left, right, bottom, top)
 
@@ -107,15 +107,15 @@ class DbShape:
         such that the new center of its bounding box is at the
         given point
         """
-        return self._bbox.center
+        return self._bbox.xy  # type: ignore
 
     @xy.setter
     def xy(self, new_point: Point) -> None:
         offset = new_point - self.xy
         self.move(offset)
 
-    @property
-    def x(self) -> Number:
+    @property  # type: ignore
+    def x(self) -> Number:  # type: ignore
         """
         The x coordinate of the center of the bounding box of the db object
 
@@ -129,8 +129,8 @@ class DbShape:
         offset = Point(new_x - self.x, 0)
         self.move(offset)
 
-    @property
-    def y(self) -> Number:
+    @property  # type: ignore
+    def y(self) -> Number:  # type: ignore
         """
         The y coordinate of the center of the bounding box of the db object
 
@@ -140,19 +140,19 @@ class DbShape:
         return self._bbox.y
 
     @y.setter
-    def y(self, new_y):
+    def y(self, new_y: Number) -> None:
         offset = Point(0, new_y - self.y)
         self.move(offset)
 
     @property
-    def width(self):
+    def width(self) -> Number:  # type: ignore
         """
         The width of the bounding box of the db object
         """
         return self._bbox.width
 
     @property
-    def height(self):
+    def height(self) -> Number:  # type: ignore
         """
         The height of the bounding box of the db object
         """
@@ -160,7 +160,7 @@ class DbShape:
 
 
 @dataclass
-class RodShape(CanTranslate, DbShape):
+class RodShape(DbShape):
     """
     A proxy to an existing shape in Virtuoso with a rod object.
 
