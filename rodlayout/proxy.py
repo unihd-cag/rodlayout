@@ -74,7 +74,7 @@ class DbShape(CanTranslate):
                 current_workspace.rod.name_shape(shape_id=fig)
 
     def _copy_figure(
-            self, cell_view: RemoteObject, translate: Point, transform: Transform
+        self, cell_view: RemoteObject, translate: Point, transform: Transform
     ) -> RemoteObject:
 
         translate_transform = cast(SkillTuple, (translate, transform.value))
@@ -85,7 +85,7 @@ class DbShape(CanTranslate):
         return cast(RemoteObject, db)
 
     def copy(
-            self, translate: Point = Point(0, 0), transform: Transform = Transform.identity
+        self, translate: Point = Point(0, 0), transform: Transform = Transform.identity
     ) -> "DbShape":
         """
         Copy the dbShape and translate, transform the copy.
@@ -189,7 +189,7 @@ class RodShape(DbShape):
         return RodShape(rod.db_id, rod)
 
     def copy(
-            self, translate: Point = Point(0, 0), transform: Transform = Transform.identity
+        self, translate: Point = Point(0, 0), transform: Transform = Transform.identity
     ) -> "RodShape":
         """
         Copy the RodShape and translate, transform the copy.
