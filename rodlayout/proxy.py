@@ -66,10 +66,10 @@ class DbShape(CanTranslate):
         """
         return cast(bool, current_workspace.db.valid_p(self.db))
 
-    def _promote_to_rod(self, fig_grp: RemoteObject) -> None:
+    def _promote_children_to_rod(self, fig_grp: RemoteObject) -> None:
         for fig in fig_grp.figs:
-            if fig.obj_type == "figGroup":
-                self._promote_to_rod(cast(RemoteObject, fig))
+            if fig.obj_type == 'figGroup':
+                self._promote_children_to_rod(cast(RemoteObject, fig))
             else:
                 current_workspace.rod.name_shape(shape_id=fig)
 
@@ -80,24 +80,24 @@ class DbShape(CanTranslate):
         translate_transform = cast(SkillTuple, (translate, transform.value))
         db = current_workspace.db.copy_fig(self.db, cell_view, translate_transform)
 
-        self._promote_to_rod(cast(RemoteObject, db))
+        self._promote_children_to_rod(cast(RemoteObject, db))
 
         return cast(RemoteObject, db)
 
     def copy(
         self, translate: Point = Point(0, 0), transform: Transform = Transform.identity
-    ) -> "DbShape":
+    ) -> 'DbShape':
         """
         Copy the dbShape and translate, transform the copy.
         """
         return DbShape(self._copy_figure(self.db.cell_view, translate, transform))
 
-    def children(self) -> Generator["RodShape", None, None]:
+    def children(self) -> Generator['RodShape', None, None]:
         """
         Get all RodShapes within a Group and its hierarchy
         """
         for fig in self.db.figs:
-            if fig.obj_type == "figGroup":
+            if fig.obj_type == 'figGroup':
                 yield from DbShape(fig).children()
             else:
                 rod = current_workspace.rod.get_obj(fig)
@@ -182,7 +182,7 @@ class RodShape(DbShape):
     rod: RemoteObject
 
     @classmethod
-    def from_rod(cls, rod: RemoteObject) -> "RodShape":
+    def from_rod(cls, rod: RemoteObject) -> 'RodShape':
         """
         Create a rod proxy from an existing rod object in virtuoso.
         """
@@ -190,7 +190,7 @@ class RodShape(DbShape):
 
     def copy(
         self, translate: Point = Point(0, 0), transform: Transform = Transform.identity
-    ) -> "RodShape":
+    ) -> 'RodShape':
         """
         Copy the RodShape and translate, transform the copy.
         """
