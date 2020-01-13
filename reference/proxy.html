@@ -54,7 +54,7 @@ E.g. figure groups will be represented as a <code class="docutils literal notran
 
 <dl class="method">
 <dt id="rodlayout.proxy.DbShape.delete">
-<code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param">children=True</em>, <em class="sig-param">redraw=False</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#rodlayout.proxy.DbShape.delete" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param">children: bool = True</em>, <em class="sig-param">redraw: bool = False</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#rodlayout.proxy.DbShape.delete" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete the db object.</p>
 <p>Setting <code class="docutils literal notranslate"><span class="pre">children</span></code> to <code class="docutils literal notranslate"><span class="pre">True</span></code> will also delete the child shapes if this
 is a figure group.</p>
@@ -67,9 +67,53 @@ because the underlying db object is not valid anymore.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="rodlayout.proxy.DbShape.height">
+<em class="property">property </em><code class="sig-name descname">height</code><a class="headerlink" href="#rodlayout.proxy.DbShape.height" title="Permalink to this definition">¶</a></dt>
+<dd><p>The height of the bounding box of the db object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rodlayout.proxy.DbShape.move">
+<code class="sig-name descname">move</code><span class="sig-paren">(</span><em class="sig-param">offset: geometry.point.Point</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#rodlayout.proxy.DbShape.move" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move the db object relative by a given offset</p>
+<p>This actually moves the object in virtuoso</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="rodlayout.proxy.DbShape.valid">
 <em class="property">property </em><code class="sig-name descname">valid</code><a class="headerlink" href="#rodlayout.proxy.DbShape.valid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the db object is still valid and was not deleted.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rodlayout.proxy.DbShape.width">
+<em class="property">property </em><code class="sig-name descname">width</code><a class="headerlink" href="#rodlayout.proxy.DbShape.width" title="Permalink to this definition">¶</a></dt>
+<dd><p>The width of the bounding box of the db object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rodlayout.proxy.DbShape.x">
+<em class="property">property </em><code class="sig-name descname">x</code><a class="headerlink" href="#rodlayout.proxy.DbShape.x" title="Permalink to this definition">¶</a></dt>
+<dd><p>The x coordinate of the center of the bounding box of the db object</p>
+<p>Assigning the property will translate the object horizontally
+such that the new x coordinate and the given x coordinate match</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rodlayout.proxy.DbShape.xy">
+<em class="property">property </em><code class="sig-name descname">xy</code><a class="headerlink" href="#rodlayout.proxy.DbShape.xy" title="Permalink to this definition">¶</a></dt>
+<dd><p>The center of the bounding box of the db object</p>
+<p>Assigning the property will translate the object
+such that the new center of its bounding box is at the
+given point</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rodlayout.proxy.DbShape.y">
+<em class="property">property </em><code class="sig-name descname">y</code><a class="headerlink" href="#rodlayout.proxy.DbShape.y" title="Permalink to this definition">¶</a></dt>
+<dd><p>The y coordinate of the center of the bounding box of the db object</p>
+<p>Assigning the property will translate the object vertically
+such that the new y coordinate and the given y coordinate match</p>
 </dd></dl>
 
 </dd></dl>
@@ -161,7 +205,7 @@ E.g. rectangles and paths will be represented as a <code class="docutils literal
       &copy;2019, Niels Buwen.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
